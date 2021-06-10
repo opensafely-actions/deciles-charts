@@ -1,0 +1,10 @@
+-c requirements.txt
+-e file:.
+
+black
+flake8
+ipython
+isort
+mypy
+pip-tools
+pytest
