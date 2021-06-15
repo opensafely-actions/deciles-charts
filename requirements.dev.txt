@@ -21,6 +21,8 @@ click==8.0.1
     #   -c requirements.txt
     #   black
     #   pip-tools
+coverage==5.5
+    # via -r requirements.dev.in
 decorator==5.0.9
     # via ipython
 flake8==3.9.2

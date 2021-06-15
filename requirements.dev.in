@@ -2,6 +2,7 @@
 -e file:.
 
 black
+coverage
 flake8
 ipython
 isort
