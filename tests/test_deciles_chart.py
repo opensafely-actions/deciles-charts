@@ -27,8 +27,10 @@ class TestGetMeasureTables:
             next(deciles_chart.get_measure_tables(tmp_path))
 
     def test_input_table(self, tmp_path):
-        # Test that the function skips an input table
-        pass
+        tmp_file = tmp_path / "input_2019-01-01.csv"
+        tmp_file.touch()
+        with pytest.raises(StopIteration):
+            next(deciles_chart.get_measure_tables(tmp_path))
 
     def test_measure_table(self, tmp_path):
         tmp_file = tmp_path / "measure_sbp_by_practice.csv"
