@@ -1,6 +1,6 @@
 import pathlib
 import re
-from typing import Generator
+from typing import Iterator
 
 import pandas
 
@@ -15,7 +15,7 @@ def _get_group_by(measure_table):
     return list(measure_table.columns[:-4])
 
 
-def get_measure_tables(path: pathlib.Path) -> Generator:
+def get_measure_tables(path: pathlib.Path) -> Iterator[pandas.DataFrame]:
     if not path.is_dir():
         raise AttributeError()
 
