@@ -49,6 +49,8 @@ mypy==0.812
     # via -r requirements.dev.in
 packaging==20.9
     # via pytest
+pandas-stubs==1.1.0.10
+    # via -r requirements.dev.in
 parso==0.8.2
     # via jedi
 pathspec==0.8.1

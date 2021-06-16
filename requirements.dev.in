@@ -7,5 +7,6 @@ flake8
 ipython
 isort
 mypy
+pandas-stubs
 pip-tools
 pytest
