@@ -2,6 +2,7 @@ from unittest import mock
 
 import pandas
 import pytest
+from pandas import testing
 
 import deciles_chart
 
@@ -52,3 +53,38 @@ class TestGetMeasureTables:
             assert measure_table.attrs["id"] == "sbp_by_practice"
             assert measure_table.attrs["denominator"] == "population"
             assert measure_table.attrs["group_by"] == ["practice"]
+
+
+class TestDropRows:
+    def test_denominator_is_zero(self):
+        measure_table = pandas.DataFrame(
+            {
+                "practice": [1, 2],
+                "has_sbp_event": [1, 0],
+                "population": [1, 0],
+                "value": [1, 0],
+                "date": ["2021-01-01", "2021-01-01"],
+            }
+        )
+        measure_table.attrs["denominator"] = "population"
+
+        obs = deciles_chart.drop_rows(measure_table)
+
+        exp = pandas.DataFrame(
+            {
+                "practice": [1],
+                "has_sbp_event": [1],
+                "population": [1],
+                "value": [1],
+                "date": ["2021-01-01"],
+            }
+        )
+        exp.attrs["denominator"] = "population"
+
+        # Reference tests
+        assert measure_table is not obs
+        assert measure_table.attrs is not obs.attrs
+
+        # Value tests
+        testing.assert_frame_equal(obs, exp)
+        assert obs.attrs == exp.attrs

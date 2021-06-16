@@ -35,3 +35,7 @@ def get_measure_tables(path: pathlib.Path) -> Iterator[pandas.DataFrame]:
             measure_table.attrs["group_by"] = _get_group_by(measure_table)
 
             yield measure_table
+
+
+def drop_rows(measure_table: pandas.DataFrame) -> pandas.DataFrame:
+    return measure_table[measure_table[measure_table.attrs["denominator"]] > 0]
