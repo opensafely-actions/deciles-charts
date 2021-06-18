@@ -137,3 +137,36 @@ class TestDropZeroDenominatorRows:
         # Value tests
         testing.assert_frame_equal(obs, exp)
         assert obs.attrs == exp.attrs
+
+
+def test_get_deciles_table():
+    measure_table = pandas.DataFrame(
+        {
+            "practice": [1],
+            "has_sbp_event": [1],
+            "population": [1],
+            "value": [1],
+            "date": ["2021-01-01"],
+        }
+    )
+    measure_table.attrs["group_by"] = ["practice"]
+
+    obs = deciles_chart.get_deciles_table.__wrapped__(measure_table)
+
+    deciles = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    exp = pandas.DataFrame(
+        {
+            "date": ["2021-01-01"] * len(deciles),
+            "deciles": deciles,
+            "value": [1.0] * len(deciles),
+        }
+    )
+    exp.attrs["group_by"] = ["practice"]
+
+    # Reference tests
+    assert measure_table is not obs
+    assert measure_table.attrs is not obs.attrs
+
+    # Value tests
+    testing.assert_frame_equal(obs, exp)
+    assert obs.attrs == exp.attrs

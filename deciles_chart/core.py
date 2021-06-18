@@ -3,9 +3,11 @@ import pathlib
 import re
 from typing import Iterator
 
+import numpy
 import pandas
 
 MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
+DECILES = pandas.Series(numpy.arange(0.1, 1, 0.1), name="deciles")
 
 
 def _get_denominator(measure_table):
@@ -58,3 +60,12 @@ def is_measure_table(func):
 @is_measure_table
 def drop_zero_denominator_rows(measure_table: pandas.DataFrame) -> pandas.DataFrame:
     return measure_table[measure_table[measure_table.attrs["denominator"]] > 0]
+
+
+@is_measure_table
+def get_deciles_table(measure_table: pandas.DataFrame) -> pandas.DataFrame:
+    by = ["date"] + measure_table.attrs["group_by"][1:]
+    deciles_table = measure_table.groupby(by)["value"].quantile(DECILES).reset_index()
+    # `measure_table.attrs` isn't persisted.
+    deciles_table.attrs = measure_table.attrs.copy()
+    return deciles_table
