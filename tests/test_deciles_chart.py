@@ -130,6 +130,8 @@ def test_drop_zero_denominator_rows():
     exp.attrs["denominator"] = "population"
 
     # Reference tests
+    # If the argument has the same reference as the return value, then it hasn't been
+    # copied and could have been edited in-place.
     assert measure_table is not obs
     assert measure_table.attrs is not obs.attrs
 
@@ -163,6 +165,8 @@ def test_get_deciles_table():
     exp.attrs["group_by"] = ["practice"]
 
     # Reference tests
+    # If the argument has the same reference as the return value, then it hasn't been
+    # copied and could have been edited in-place.
     assert measure_table is not obs
     assert measure_table.attrs is not obs.attrs
 
