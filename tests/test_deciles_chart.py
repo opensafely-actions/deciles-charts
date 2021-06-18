@@ -104,7 +104,7 @@ class TestIsMeasureTable:
         mocked.assert_called_with(measure_table)
 
 
-class TestDropRows:
+class TestDropZeroDenominatorRows:
     def test_denominator_is_zero(self):
         measure_table = pandas.DataFrame(
             {
@@ -117,7 +117,7 @@ class TestDropRows:
         )
         measure_table.attrs["denominator"] = "population"
 
-        obs = deciles_chart.drop_rows.__wrapped__(measure_table)
+        obs = deciles_chart.drop_zero_denominator_rows.__wrapped__(measure_table)
 
         exp = pandas.DataFrame(
             {
