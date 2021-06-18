@@ -104,39 +104,38 @@ class TestIsMeasureTable:
         mocked.assert_called_with(measure_table)
 
 
-class TestDropZeroDenominatorRows:
-    def test_denominator_is_zero(self):
-        measure_table = pandas.DataFrame(
-            {
-                "practice": [1, 2],
-                "has_sbp_event": [1, 0],
-                "population": [1, 0],
-                "value": [1, 0],
-                "date": ["2021-01-01", "2021-01-01"],
-            }
-        )
-        measure_table.attrs["denominator"] = "population"
+def test_drop_zero_denominator_rows():
+    measure_table = pandas.DataFrame(
+        {
+            "practice": [1, 2],
+            "has_sbp_event": [1, 0],
+            "population": [1, 0],
+            "value": [1, 0],
+            "date": ["2021-01-01", "2021-01-01"],
+        }
+    )
+    measure_table.attrs["denominator"] = "population"
 
-        obs = deciles_chart.drop_zero_denominator_rows.__wrapped__(measure_table)
+    obs = deciles_chart.drop_zero_denominator_rows.__wrapped__(measure_table)
 
-        exp = pandas.DataFrame(
-            {
-                "practice": [1],
-                "has_sbp_event": [1],
-                "population": [1],
-                "value": [1],
-                "date": ["2021-01-01"],
-            }
-        )
-        exp.attrs["denominator"] = "population"
+    exp = pandas.DataFrame(
+        {
+            "practice": [1],
+            "has_sbp_event": [1],
+            "population": [1],
+            "value": [1],
+            "date": ["2021-01-01"],
+        }
+    )
+    exp.attrs["denominator"] = "population"
 
-        # Reference tests
-        assert measure_table is not obs
-        assert measure_table.attrs is not obs.attrs
+    # Reference tests
+    assert measure_table is not obs
+    assert measure_table.attrs is not obs.attrs
 
-        # Value tests
-        testing.assert_frame_equal(obs, exp)
-        assert obs.attrs == exp.attrs
+    # Value tests
+    testing.assert_frame_equal(obs, exp)
+    assert obs.attrs == exp.attrs
 
 
 def test_get_deciles_table():
