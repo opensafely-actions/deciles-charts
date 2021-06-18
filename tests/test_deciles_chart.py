@@ -55,6 +55,55 @@ class TestGetMeasureTables:
             assert measure_table.attrs["group_by"] == ["practice"]
 
 
+class TestIsMeasureTable:
+    @pytest.fixture
+    def measure_table(self):
+        mt = pandas.DataFrame(
+            columns=[
+                "practice",
+                "has_sbp_event",
+                "population",
+                "value",
+                "date",
+            ]
+        )
+        mt.attrs["id"] = "sbp_by_practice"
+        mt.attrs["denominator"] = "population"
+        mt.attrs["group_by"] = ["practice"]
+        return mt
+
+    def test_missing_value_column(self, measure_table):
+        del measure_table["value"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_measure_table(mock.MagicMock())(measure_table)
+
+    def test_missing_date_column(self, measure_table):
+        del measure_table["date"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_measure_table(mock.MagicMock())(measure_table)
+
+    def test_missing_id_attr(self, measure_table):
+        del measure_table.attrs["id"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_measure_table(mock.MagicMock())(measure_table)
+
+    def test_missing_denominator_attr(self, measure_table):
+        del measure_table.attrs["denominator"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_measure_table(mock.MagicMock())(measure_table)
+
+    def test_missing_group_by_attr(self, measure_table):
+        del measure_table.attrs["group_by"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_measure_table(mock.MagicMock())(measure_table)
+
+    def test_wrapped_function_is_called(self, measure_table):
+        mocked = mock.MagicMock()
+        deciles_chart.is_measure_table(mocked)(measure_table)
+        mocked.assert_called_once()
+        mocked.assert_called_with(measure_table)
+
+
 class TestDropRows:
     def test_denominator_is_zero(self):
         measure_table = pandas.DataFrame(
