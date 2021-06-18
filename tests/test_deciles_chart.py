@@ -117,7 +117,7 @@ class TestDropRows:
         )
         measure_table.attrs["denominator"] = "population"
 
-        obs = deciles_chart.drop_rows(measure_table)
+        obs = deciles_chart.drop_rows.__wrapped__(measure_table)
 
         exp = pandas.DataFrame(
             {

@@ -55,5 +55,6 @@ def is_measure_table(func):
     return wrapper
 
 
+@is_measure_table
 def drop_rows(measure_table: pandas.DataFrame) -> pandas.DataFrame:
     return measure_table[measure_table[measure_table.attrs["denominator"]] > 0]
