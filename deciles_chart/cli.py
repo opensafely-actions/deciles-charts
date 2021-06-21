@@ -12,4 +12,5 @@ import deciles_chart
 def main(input_dir):
     for measures_table in deciles_chart.get_measures_tables(input_dir):
         measures_table = deciles_chart.drop_zero_denominator_rows(measures_table)
+        deciles_table = deciles_chart.get_deciles_table(measures_table)
         click.echo("Hello, world!")
