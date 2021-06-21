@@ -108,9 +108,9 @@ def test_drop_zero_denominator_rows():
     measure_table = pandas.DataFrame(
         {
             "practice": [1, 2],
-            "has_sbp_event": [1, 0],
-            "population": [1, 0],
-            "value": [1, 0],
+            "has_sbp_event": [0, 1],
+            "population": [0, 1],
+            "value": [0, 1],
             "date": ["2021-01-01", "2021-01-01"],
         }
     )
@@ -120,7 +120,7 @@ def test_drop_zero_denominator_rows():
 
     exp = pandas.DataFrame(
         {
-            "practice": [1],
+            "practice": [2],
             "has_sbp_event": [1],
             "population": [1],
             "value": [1],

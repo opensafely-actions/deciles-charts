@@ -59,7 +59,9 @@ def is_measure_table(func):
 
 @is_measure_table
 def drop_zero_denominator_rows(measure_table: pandas.DataFrame) -> pandas.DataFrame:
-    return measure_table[measure_table[measure_table.attrs["denominator"]] > 0]
+    return measure_table[
+        measure_table[measure_table.attrs["denominator"]] > 0
+    ].reset_index(drop=True)
 
 
 @is_measure_table
