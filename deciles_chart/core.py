@@ -1,13 +1,17 @@
 import functools
+import json
 import pathlib
 import re
-from typing import Iterator
+from typing import Any, Dict, Iterator
 
+import altair  # type: ignore
 import numpy
 import pandas
 
 MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
 DECILES = pandas.Series(numpy.arange(0.1, 1, 0.1), name="deciles")
+
+altair.data_transformers.disable_max_rows()
 
 
 def _get_denominator(measure_table):
@@ -88,3 +92,35 @@ def is_deciles_table(func):
         return func(*args, **kwargs)
 
     return wrapper
+
+
+@is_deciles_table
+def get_deciles_chart(deciles_table: pandas.DataFrame) -> Dict[str, Any]:
+    chart = (
+        altair.Chart(deciles_table)
+        .mark_line()
+        .encode(
+            x="date:T",
+            y="value:Q",
+            detail="deciles:O",
+        )
+    )
+
+    facets = deciles_table.columns[1:-2]
+    if not facets.empty:
+        assert len(facets) == 1, "We cannot facet by more than one column"  # FIXME
+        chart = chart.facet(row=f"{facets[0]}:N")
+
+    # It's important to add top-level chart properties last, because `chart` may now be
+    # an instance of `FacetChart`. `usermeta` is part of the VegaLite specification.
+    chart = chart.properties(usermeta=deciles_table.attrs.copy())
+
+    return chart.to_dict()
+
+
+def write_deciles_chart(deciles_chart: Dict[str, Any], path: pathlib.Path) -> None:
+    id_ = deciles_chart["usermeta"]["id"]
+    fname = f"deciles_chart_{id_}.vl.json"
+    fpath = path / fname
+    with open(fpath, "w", encoding="utf8") as f:
+        json.dump(deciles_chart, f, indent=2)
