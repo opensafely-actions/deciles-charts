@@ -11,7 +11,9 @@ appdirs==1.4.4
 appnope==0.1.2
     # via ipython
 attrs==21.2.0
-    # via pytest
+    # via
+    #   -c requirements.txt
+    #   pytest
 backcall==0.2.0
     # via ipython
 black==21.5b2
