@@ -70,3 +70,21 @@ def get_deciles_table(measure_table: pandas.DataFrame) -> pandas.DataFrame:
     # `measure_table.attrs` isn't persisted.
     deciles_table.attrs = measure_table.attrs.copy()
     return deciles_table
+
+
+def is_deciles_table(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        deciles_table = args[0]
+
+        assert "date" in deciles_table.columns, "Missing date column"
+        assert "deciles" in deciles_table.columns, "Missing deciles column"
+        assert "value" in deciles_table.columns, "Missing value column"
+
+        assert "id" in deciles_table.attrs, "Missing id attribute"
+        assert "denominator" in deciles_table.attrs, "Missing denominator attribute"
+        assert "group_by" in deciles_table.attrs, "Missing group_by attribute"
+
+        return func(*args, **kwargs)
+
+    return wrapper

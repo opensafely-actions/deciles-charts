@@ -173,3 +173,55 @@ def test_get_deciles_table():
     # Value tests
     testing.assert_frame_equal(obs, exp)
     assert obs.attrs == exp.attrs
+
+
+class TestIsDecilesTable:
+    @pytest.fixture
+    def deciles_table(self):
+        dt = pandas.DataFrame(
+            columns=[
+                "date",
+                "deciles",
+                "value",
+            ]
+        )
+        dt.attrs["id"] = "sbp_by_practice"
+        dt.attrs["denominator"] = "population"
+        dt.attrs["group_by"] = ["practice"]
+        return dt
+
+    def test_missing_date_column(self, deciles_table):
+        del deciles_table["date"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_deciles_table(mock.MagicMock())(deciles_table)
+
+    def test_missing_deciles_column(self, deciles_table):
+        del deciles_table["deciles"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_deciles_table(mock.MagicMock())(deciles_table)
+
+    def test_missing_value_column(self, deciles_table):
+        del deciles_table["value"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_deciles_table(mock.MagicMock())(deciles_table)
+
+    def test_missing_id_attr(self, deciles_table):
+        del deciles_table.attrs["id"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_deciles_table(mock.MagicMock())(deciles_table)
+
+    def test_missing_denominator_attr(self, deciles_table):
+        del deciles_table.attrs["denominator"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_deciles_table(mock.MagicMock())(deciles_table)
+
+    def test_missing_group_by_attr(self, deciles_table):
+        del deciles_table.attrs["group_by"]
+        with pytest.raises(AssertionError):
+            deciles_chart.is_deciles_table(mock.MagicMock())(deciles_table)
+
+    def test_wrapped_function_is_called(self, deciles_table):
+        mocked = mock.MagicMock()
+        deciles_chart.is_deciles_table(mocked)(deciles_table)
+        mocked.assert_called_once()
+        mocked.assert_called_with(deciles_table)
