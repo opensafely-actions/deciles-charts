@@ -24,15 +24,21 @@ click==8.0.1
 coverage==5.5
     # via -r requirements.dev.in
 decorator==5.0.9
-    # via ipython
+    # via
+    #   ipdb
+    #   ipython
 flake8==3.9.2
     # via -r requirements.dev.in
 iniconfig==1.1.1
     # via pytest
+ipdb==0.13.9
+    # via -r requirements.dev.in
 ipython-genutils==0.2.0
     # via traitlets
 ipython==7.24.0
-    # via -r requirements.dev.in
+    # via
+    #   -r requirements.dev.in
+    #   ipdb
 isort==5.8.0
     # via -r requirements.dev.in
 jedi==0.18.0
@@ -86,6 +92,7 @@ regex==2021.4.4
 toml==0.10.2
     # via
     #   black
+    #   ipdb
     #   pep517
     #   pytest
 traitlets==5.0.5
