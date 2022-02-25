@@ -8,6 +8,7 @@ import altair  # type: ignore
 import numpy
 import pandas
 
+
 MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
 DECILES = pandas.Series(numpy.arange(0.1, 1, 0.1), name="deciles")
 
