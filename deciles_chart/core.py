@@ -72,6 +72,12 @@ def drop_zero_denominator_rows(measure_table: pandas.DataFrame) -> pandas.DataFr
 def get_deciles_table(measure_table: pandas.DataFrame) -> pandas.DataFrame:
     by = ["date"] + measure_table.attrs["group_by"][1:]
     deciles_table = measure_table.groupby(by)["value"].quantile(DECILES).reset_index()
+    # Previously, it wasn't necessary to rename "level_1", which is created by the call
+    # to .quantile, to "deciles" because this method used the name of DECILES (i.e.
+    # Series.name). However, it now is, which may be a regression in Pandas. When we
+    # downgrade Pandas (a prod dependency) to match opensafely-core/python-docker, we
+    # should revisit.
+    deciles_table = deciles_table.rename(columns={"level_1": "deciles"})
     # `measure_table.attrs` isn't persisted.
     deciles_table.attrs = measure_table.attrs.copy()
     return deciles_table
