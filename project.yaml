@@ -1,0 +1,25 @@
+version: "3.0"
+
+expectations:
+  population_size: 1000
+
+actions:
+  # These actions are copied-and-pasted into README.md for user-facing documentation.
+  # If you change them here, then please change them there.
+  generate_cohort:
+    run: >
+      cohortextractor:latest generate_cohort
+        --study-definition study_definition
+        --index-date-range "2021-01-01 to 2021-06-30 by month"
+    outputs:
+      highly_sensitive:
+        cohort: output/input_2021-*.csv
+
+  generate_measures:
+    run: >
+      cohortextractor:latest generate_measures
+        --study-definition study_definition
+    needs: [generate_cohort]
+    outputs:
+      moderately_sensitive:
+        measure: output/measure_*.csv
