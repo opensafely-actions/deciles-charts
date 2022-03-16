@@ -4,11 +4,7 @@ import pandas
 import pytest
 from pandas import testing
 
-import deciles_chart
-
-
-def test_version():
-    assert deciles_chart.__version__ == "0.1.0"
+from analysis import deciles_chart
 
 
 class TestGetMeasureTables:
