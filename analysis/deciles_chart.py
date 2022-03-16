@@ -1,3 +1,4 @@
+import argparse
 import functools
 import json
 import pathlib
@@ -131,3 +132,36 @@ def write_deciles_chart(deciles_chart: Dict[str, Any], path: pathlib.Path) -> No
     fpath = path / fname
     with open(fpath, "w", encoding="utf8") as f:
         json.dump(deciles_chart, f, indent=2)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--input_dir",
+        required=True,
+        type=pathlib.Path,
+        help="Path to the input directory",
+    )
+    parser.add_argument(
+        "--output_dir",
+        required=True,
+        type=pathlib.Path,
+        help="Path to the output directory",
+    )
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    input_dir = args.input_dir
+    output_dir = args.output_dir
+
+    for measures_table in get_measure_tables(input_dir):
+        measures_table = drop_zero_denominator_rows(measures_table)
+        deciles_table = get_deciles_table(measures_table)
+        chart = get_deciles_chart(deciles_table)
+        write_deciles_chart(chart, output_dir)
+
+
+if __name__ == "__main__":
+    main()
