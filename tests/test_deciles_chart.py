@@ -33,13 +33,13 @@ class TestGetMeasureTables:
         tmp_file = tmp_path / "measure_sbp_by_practice.csv"
         tmp_file.touch()
         measure_table_csv = pandas.DataFrame(
-            columns=[
-                "practice",  # group_by
-                "has_sbp_event",  # numerator
-                "population",  # denominator
-                "value",  # assigned by the measures framework
-                "date",  # assigned by the measures framework
-            ]
+            {
+                "practice": [],  # group_by
+                "has_sbp_event": [],  # numerator
+                "population": [],  # denominator
+                "value": [],  # assigned by the measures framework
+                "date": [],  # assigned by the measures framework
+            }
         )
         with mock.patch("pandas.read_csv", return_value=measure_table_csv) as mocked:
             measure_table = next(deciles_chart.get_measure_tables(tmp_path))
@@ -55,13 +55,13 @@ class TestIsMeasureTable:
     @pytest.fixture
     def measure_table(self):
         mt = pandas.DataFrame(
-            columns=[
-                "practice",
-                "has_sbp_event",
-                "population",
-                "value",
-                "date",
-            ]
+            {
+                "practice": [],  # group_by
+                "has_sbp_event": [],  # numerator
+                "population": [],  # denominator
+                "value": [],  # assigned by the measures framework
+                "date": [],  # assigned by the measures framework
+            }
         )
         mt.attrs["id"] = "sbp_by_practice"
         mt.attrs["denominator"] = "population"
@@ -175,11 +175,11 @@ class TestIsDecilesTable:
     @pytest.fixture
     def deciles_table(self):
         dt = pandas.DataFrame(
-            columns=[
-                "date",
-                "deciles",
-                "value",
-            ]
+            {
+                "date": [],
+                "deciles": [],
+                "value": [],
+            }
         )
         dt.attrs["id"] = "sbp_by_practice"
         dt.attrs["denominator"] = "population"

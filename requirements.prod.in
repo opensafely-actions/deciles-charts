@@ -1,2 +1,7 @@
+# Main prod requirements
+
+# To generate requirements file, run:
+# pip-compile --generate-hashes --output-file=requirements.prod.txt requirements.prod.in
+
 altair
-pandas
+pandas==1.0.1
