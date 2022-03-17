@@ -1,12 +1,12 @@
 import argparse
 import functools
-import json
 import pathlib
 import re
-from typing import Any, Dict, Iterator
+from typing import Iterator
 
 import numpy
 import pandas
+from ebmdatalab import charts
 
 
 MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
@@ -99,17 +99,13 @@ def is_deciles_table(func):
     return wrapper
 
 
-@is_deciles_table
-def get_deciles_chart(deciles_table: pandas.DataFrame) -> Dict[str, Any]:
-    return {"usermeta": deciles_table.attrs.copy()}  # FIXME
+@is_measure_table
+def get_deciles_chart(measures_table):
+    return charts.deciles_chart(measures_table, period_column="date", column="value")
 
 
-def write_deciles_chart(deciles_chart: Dict[str, Any], path: pathlib.Path) -> None:
-    id_ = deciles_chart["usermeta"]["id"]
-    fname = f"deciles_chart_{id_}.vl.json"
-    fpath = path / fname
-    with open(fpath, "w", encoding="utf8") as f:
-        json.dump(deciles_chart, f, indent=2)
+def write_deciles_chart(deciles_chart, path):
+    deciles_chart.savefig(path)
 
 
 def parse_args():
@@ -136,9 +132,10 @@ def main():
 
     for measures_table in get_measure_tables(input_dir):
         measures_table = drop_zero_denominator_rows(measures_table)
-        deciles_table = get_deciles_table(measures_table)
-        chart = get_deciles_chart(deciles_table)
-        write_deciles_chart(chart, output_dir)
+        chart = get_deciles_chart(measures_table)
+        id_ = measures_table.attrs["id"]
+        fname = f"deciles_chart_{id_}.png"
+        write_deciles_chart(chart, output_dir / fname)
 
 
 if __name__ == "__main__":
