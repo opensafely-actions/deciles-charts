@@ -26,7 +26,7 @@ actions:
 
   generate_deciles_charts:
     run: >
-      python:latest analysis/deciles_chart.py
+      python:latest analysis/deciles_charts.py
         --input_dir output
         --output_dir output
     needs: [generate_measures]
