@@ -49,6 +49,7 @@ class TestGetMeasureTables:
 
 
 def test_drop_zero_denominator_rows():
+    # arrange
     measure_table = pandas.DataFrame(
         {
             "practice": [1, 2],
@@ -59,10 +60,7 @@ def test_drop_zero_denominator_rows():
         }
     )
     measure_table.attrs["denominator"] = "population"
-
-    obs = deciles_chart.drop_zero_denominator_rows(measure_table)
-
-    exp = pandas.DataFrame(
+    exp_measure_table = pandas.DataFrame(
         {
             "practice": [2],
             "has_sbp_event": [1],
@@ -71,14 +69,13 @@ def test_drop_zero_denominator_rows():
             "date": ["2021-01-01"],
         }
     )
-    exp.attrs["denominator"] = "population"
+    exp_measure_table.attrs["denominator"] = "population"
 
-    # Reference tests
-    # If the argument has the same reference as the return value, then it hasn't been
-    # copied and could have been edited in-place.
-    assert measure_table is not obs
-    assert measure_table.attrs is not obs.attrs
+    # act
+    obs_measure_table = deciles_chart.drop_zero_denominator_rows(measure_table)
 
-    # Value tests
-    testing.assert_frame_equal(obs, exp)
-    assert obs.attrs == exp.attrs
+    # assert
+    testing.assert_frame_equal(obs_measure_table, exp_measure_table)
+    assert obs_measure_table.attrs == exp_measure_table.attrs
+    assert obs_measure_table is not measure_table  # test it's a copy
+    assert obs_measure_table.attrs is not measure_table.attrs  # test it's a copy
