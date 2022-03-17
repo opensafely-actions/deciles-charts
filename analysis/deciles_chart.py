@@ -1,7 +1,6 @@
 import argparse
 import pathlib
 import re
-from typing import Iterator
 
 import pandas
 from ebmdatalab import charts
@@ -18,7 +17,7 @@ def _get_group_by(measure_table):
     return list(measure_table.columns[:-4])
 
 
-def get_measure_tables(path: pathlib.Path) -> Iterator[pandas.DataFrame]:
+def get_measure_tables(path):
     if not path.is_dir():
         raise AttributeError()
 
@@ -40,7 +39,7 @@ def get_measure_tables(path: pathlib.Path) -> Iterator[pandas.DataFrame]:
             yield measure_table
 
 
-def drop_zero_denominator_rows(measure_table: pandas.DataFrame) -> pandas.DataFrame:
+def drop_zero_denominator_rows(measure_table):
     mask = measure_table[measure_table.attrs["denominator"]] > 0
     return measure_table[mask].reset_index(drop=True)
 
