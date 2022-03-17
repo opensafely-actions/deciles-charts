@@ -45,8 +45,8 @@ def drop_zero_denominator_rows(measure_table: pandas.DataFrame) -> pandas.DataFr
     return measure_table[mask].reset_index(drop=True)
 
 
-def get_deciles_chart(measures_table):
-    return charts.deciles_chart(measures_table, period_column="date", column="value")
+def get_deciles_chart(measure_table):
+    return charts.deciles_chart(measure_table, period_column="date", column="value")
 
 
 def write_deciles_chart(deciles_chart, path):
@@ -75,10 +75,10 @@ def main():
     input_dir = args.input_dir
     output_dir = args.output_dir
 
-    for measures_table in get_measure_tables(input_dir):
-        measures_table = drop_zero_denominator_rows(measures_table)
-        chart = get_deciles_chart(measures_table)
-        id_ = measures_table.attrs["id"]
+    for measure_table in get_measure_tables(input_dir):
+        measure_table = drop_zero_denominator_rows(measure_table)
+        chart = get_deciles_chart(measure_table)
+        id_ = measure_table.attrs["id"]
         fname = f"deciles_chart_{id_}.png"
         write_deciles_chart(chart, output_dir / fname)
 
