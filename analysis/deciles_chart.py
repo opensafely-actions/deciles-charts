@@ -1,5 +1,4 @@
 import argparse
-import functools
 import pathlib
 import re
 from typing import Iterator
@@ -41,30 +40,11 @@ def get_measure_tables(path: pathlib.Path) -> Iterator[pandas.DataFrame]:
             yield measure_table
 
 
-def is_measure_table(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        measure_table = args[0]
-
-        assert "value" in measure_table.columns, "Missing value column"
-        assert "date" in measure_table.columns, "Missing date column"
-
-        assert "id" in measure_table.attrs, "Missing id attribute"
-        assert "denominator" in measure_table.attrs, "Missing denominator attribute"
-        assert "group_by" in measure_table.attrs, "Missing group_by attribute"
-
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-@is_measure_table
 def drop_zero_denominator_rows(measure_table: pandas.DataFrame) -> pandas.DataFrame:
     mask = measure_table[measure_table.attrs["denominator"]] > 0
     return measure_table[mask].reset_index(drop=True)
 
 
-@is_measure_table
 def get_deciles_chart(measures_table):
     return charts.deciles_chart(measures_table, period_column="date", column="value")
 
