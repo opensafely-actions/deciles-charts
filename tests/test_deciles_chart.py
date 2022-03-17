@@ -1,5 +1,3 @@
-from unittest import mock
-
 import pandas
 import pytest
 from pandas import testing
@@ -8,9 +6,6 @@ from analysis import deciles_chart
 
 
 class TestGetMeasureTables:
-    # It's important to materialise the temporary files and paths within the methods of
-    # this class so that they can, for example, be iterated over.
-
     def test_path_is_not_dir(self, tmp_path):
         tmp_file = tmp_path / "measure_sbp_by_practice.csv"
         tmp_file.touch()
@@ -30,25 +25,27 @@ class TestGetMeasureTables:
             next(deciles_chart.get_measure_tables(tmp_path))
 
     def test_measure_table(self, tmp_path):
-        tmp_file = tmp_path / "measure_sbp_by_practice.csv"
-        tmp_file.touch()
-        measure_table_csv = pandas.DataFrame(
+        # arrange
+        measure_table_in = pandas.DataFrame(
             {
-                "practice": [],  # group_by
-                "has_sbp_event": [],  # numerator
-                "population": [],  # denominator
-                "value": [],  # assigned by the measures framework
-                "date": [],  # assigned by the measures framework
+                "practice": [1],  # group_by
+                "has_sbp_event": [1],  # numerator
+                "population": [1],  # denominator
+                "value": [1],  # assigned by the measures framework
+                "date": ["2021-01-01"],  # assigned by the measures framework
             }
         )
-        with mock.patch("pandas.read_csv", return_value=measure_table_csv) as mocked:
-            measure_table = next(deciles_chart.get_measure_tables(tmp_path))
+        measure_table_in["date"] = pandas.to_datetime(measure_table_in["date"])
+        measure_table_in.to_csv(tmp_path / "measure_sbp_by_practice.csv", index=False)
 
-            mocked.assert_called_once()
-            mocked.assert_called_with(tmp_file, parse_dates=["date"])
-            assert measure_table.attrs["id"] == "sbp_by_practice"
-            assert measure_table.attrs["denominator"] == "population"
-            assert measure_table.attrs["group_by"] == ["practice"]
+        # act
+        measure_table_out = next(deciles_chart.get_measure_tables(tmp_path))
+
+        # assert
+        testing.assert_frame_equal(measure_table_out, measure_table_in)
+        assert measure_table_out.attrs["id"] == "sbp_by_practice"
+        assert measure_table_out.attrs["denominator"] == "population"
+        assert measure_table_out.attrs["group_by"] == ["practice"]
 
 
 def test_drop_zero_denominator_rows():
