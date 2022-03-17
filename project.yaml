@@ -23,3 +23,13 @@ actions:
     outputs:
       moderately_sensitive:
         measure: output/measure_*.csv
+
+  generate_deciles_charts:
+    run: >
+      python:latest analysis/deciles_chart.py
+        --input_dir output
+        --output_dir output
+    needs: [generate_measures]
+    outputs:
+      moderately_sensitive:
+        deciles_charts: output/deciles_chart_*.png
