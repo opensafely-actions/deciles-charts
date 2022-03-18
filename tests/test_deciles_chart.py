@@ -2,7 +2,7 @@ import pandas
 import pytest
 from pandas import testing
 
-from analysis import deciles_chart
+from analysis import deciles_charts
 
 
 class TestGetMeasureTables:
@@ -10,19 +10,19 @@ class TestGetMeasureTables:
         tmp_file = tmp_path / "measure_sbp_by_practice.csv"
         tmp_file.touch()
         with pytest.raises(AttributeError):
-            next(deciles_chart.get_measure_tables(tmp_file))
+            next(deciles_charts.get_measure_tables(tmp_file))
 
     def test_no_recurse(self, tmp_path):
         tmp_sub_path = tmp_path / "measures"
         tmp_sub_path.mkdir()
         with pytest.raises(StopIteration):
-            next(deciles_chart.get_measure_tables(tmp_path))
+            next(deciles_charts.get_measure_tables(tmp_path))
 
     def test_input_table(self, tmp_path):
         tmp_file = tmp_path / "input_2019-01-01.csv"
         tmp_file.touch()
         with pytest.raises(StopIteration):
-            next(deciles_chart.get_measure_tables(tmp_path))
+            next(deciles_charts.get_measure_tables(tmp_path))
 
     def test_measure_table(self, tmp_path):
         # arrange
@@ -39,7 +39,7 @@ class TestGetMeasureTables:
         measure_table_in.to_csv(tmp_path / "measure_sbp_by_practice.csv", index=False)
 
         # act
-        measure_table_out = next(deciles_chart.get_measure_tables(tmp_path))
+        measure_table_out = next(deciles_charts.get_measure_tables(tmp_path))
 
         # assert
         testing.assert_frame_equal(measure_table_out, measure_table_in)
@@ -72,7 +72,7 @@ def test_drop_zero_denominator_rows():
     exp_measure_table.attrs["denominator"] = "population"
 
     # act
-    obs_measure_table = deciles_chart.drop_zero_denominator_rows(measure_table)
+    obs_measure_table = deciles_charts.drop_zero_denominator_rows(measure_table)
 
     # assert
     testing.assert_frame_equal(obs_measure_table, exp_measure_table)
