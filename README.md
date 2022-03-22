@@ -65,8 +65,8 @@ generate_deciles_charts:
 ```
 
 For each measure table, there will now be a corresponding deciles chart.
-For example, given a measure table called `measure_has_sbp_event_by_population.csv`,
-there will now be a corresponding deciles chart called `deciles_chart_has_sbp_event_by_population.png`.
+For example, given a measure table called `measure_has_sbp_event_by_stp_code.csv`,
+there will now be a corresponding deciles chart called `deciles_chart_has_sbp_event_by_stp_code.png`.
 
 ## Notes for developers
 

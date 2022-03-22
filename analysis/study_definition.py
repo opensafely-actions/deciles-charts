@@ -38,7 +38,7 @@ study = StudyDefinition(
 
 measures = [
     Measure(
-        id="has_sbp_event_by_population",
+        id="has_sbp_event_by_stp_code",
         numerator="has_sbp_event",
         denominator="population",
         group_by="stp_code",
