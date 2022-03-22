@@ -1,11 +1,5 @@
 {
   "files": {
-    "opensafely-ethnicity.csv": {
-      "id": "opensafely/ethnicity/2020-04-27",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
-      "downloaded_at": "2022-03-16 09:44:35.992485Z",
-      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
-    },
     "opensafely-systolic-blood-pressure-qof.csv": {
       "id": "opensafely/systolic-blood-pressure-qof/3572b5fb",
       "url": "https://codelists.opensafely.org/codelist/opensafely/systolic-blood-pressure-qof/3572b5fb/",
