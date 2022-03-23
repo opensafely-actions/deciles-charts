@@ -86,7 +86,6 @@ $RECYCLE.BIN/
 
 # Python
 __pycache__
-.python-version
 *.pyc
 
 # Coverage
@@ -105,7 +104,6 @@ venv/
 model.log
 */input.csv
 __pycache__
-.python-version
 output/*
 metadata/*
 venv/
