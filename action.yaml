@@ -1,1 +1,1 @@
-run: python:latest analysis/deciles_charts.py
+run: python:latest python analysis/deciles_charts.py
