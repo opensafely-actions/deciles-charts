@@ -29,3 +29,4 @@ lines_after_imports = 2
 skip_glob = [".direnv", "venv", ".venv"]
 
 [tool.pytest.ini_options]
+filterwarnings = ["ignore::DeprecationWarning"]
