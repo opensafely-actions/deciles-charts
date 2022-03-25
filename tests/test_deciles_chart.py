@@ -79,3 +79,27 @@ def test_drop_zero_denominator_rows():
     assert obs_measure_table.attrs == exp_measure_table.attrs
     assert obs_measure_table is not measure_table  # test it's a copy
     assert obs_measure_table.attrs is not measure_table.attrs  # test it's a copy
+
+
+def test_parse_args(tmp_path, monkeypatch):
+    # arrange
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "deciles_charts.py",
+            "--input_dir",
+            "input",
+            "--output_dir",
+            "output",
+        ],
+    )
+    (tmp_path / "input").mkdir()
+    (tmp_path / "output").mkdir()
+
+    # act
+    args = deciles_charts.parse_args()
+
+    # assert
+    args.input_dir == "input"
+    args.output_dir == "output"
