@@ -88,9 +88,9 @@ def test_parse_args(tmp_path, monkeypatch):
         "sys.argv",
         [
             "deciles_charts.py",
-            "--input_dir",
+            "--input-dir",
             "input",
-            "--output_dir",
+            "--output-dir",
             "output",
         ],
     )
