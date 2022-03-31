@@ -55,13 +55,13 @@ def write_deciles_chart(deciles_chart, path):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--input_dir",
+        "--input-dir",
         required=True,
         type=pathlib.Path,
         help="Path to the input directory",
     )
     parser.add_argument(
-        "--output_dir",
+        "--output-dir",
         required=True,
         type=pathlib.Path,
         help="Path to the output directory",

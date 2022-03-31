@@ -27,8 +27,8 @@ actions:
   generate_deciles_charts:
     run: >
       python:latest analysis/deciles_charts.py
-        --input_dir output
-        --output_dir output
+        --input-dir output
+        --output-dir output
     needs: [generate_measures]
     outputs:
       moderately_sensitive:
