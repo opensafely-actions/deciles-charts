@@ -8,23 +8,11 @@ from analysis import deciles_charts
 
 
 class TestGetMeasureTables:
-    def test_path_is_not_dir(self, tmp_path):
-        tmp_file = tmp_path / "measure_sbp_by_practice.csv"
-        tmp_file.touch()
-        with pytest.raises(AttributeError):
-            next(deciles_charts.get_measure_tables(tmp_file))
-
-    def test_no_recurse(self, tmp_path):
-        tmp_sub_path = tmp_path / "measures"
-        tmp_sub_path.mkdir()
-        with pytest.raises(StopIteration):
-            next(deciles_charts.get_measure_tables(tmp_path))
-
     def test_input_table(self, tmp_path):
         tmp_file = tmp_path / "input_2019-01-01.csv"
         tmp_file.touch()
         with pytest.raises(StopIteration):
-            next(deciles_charts.get_measure_tables(tmp_path))
+            next(deciles_charts.get_measure_tables([tmp_path]))
 
     def test_measure_table(self, tmp_path):
         # arrange
@@ -38,10 +26,11 @@ class TestGetMeasureTables:
             }
         )
         measure_table_in["date"] = pandas.to_datetime(measure_table_in["date"])
-        measure_table_in.to_csv(tmp_path / "measure_sbp_by_practice.csv", index=False)
+        input_file = tmp_path / "measure_sbp_by_practice.csv"
+        measure_table_in.to_csv(input_file, index=False)
 
         # act
-        measure_table_out = next(deciles_charts.get_measure_tables(tmp_path))
+        measure_table_out = next(deciles_charts.get_measure_tables([input_file]))
 
         # assert
         testing.assert_frame_equal(measure_table_out, measure_table_in)
@@ -90,18 +79,35 @@ def test_parse_args(tmp_path, monkeypatch):
         "sys.argv",
         [
             "deciles_charts.py",
-            "--input-dir",
-            "input",
+            "--input-files",
+            "input/measure_*.csv",
             "--output-dir",
             "output",
         ],
     )
-    (tmp_path / "input").mkdir()
+
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    input_files = []
+    for input_file_name in [
+        "measure_has_sbp_event_by_stp_code.csv",
+        "measure_has_sbp_event_by_stp_code_2021-01-01.csv",
+        "measure_has_sbp_event_by_stp_code_2021-02-01.csv",
+        "measure_has_sbp_event_by_stp_code_2021-03-01.csv",
+        "measure_has_sbp_event_by_stp_code_2021-04-01.csv",
+        "measure_has_sbp_event_by_stp_code_2021-05-01.csv",
+        "measure_has_sbp_event_by_stp_code_2021-06-01.csv",
+    ]:
+        input_file = input_dir / input_file_name
+        input_file.touch()
+        input_files.append(input_file)
+
     (tmp_path / "output").mkdir()
 
     # act
     args = deciles_charts.parse_args()
 
     # assert
-    assert args.input_dir == pathlib.Path("input")
+    assert sorted(args.input_files) == sorted(input_files)
     assert args.output_dir == pathlib.Path("output")
