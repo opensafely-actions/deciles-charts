@@ -1,5 +1,3 @@
-import pathlib
-
 import pandas
 import pytest
 from pandas import testing
@@ -103,11 +101,12 @@ def test_parse_args(tmp_path, monkeypatch):
         input_file.touch()
         input_files.append(input_file)
 
-    (tmp_path / "output").mkdir()
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
 
     # act
     args = deciles_charts.parse_args()
 
     # assert
     assert sorted(args.input_files) == sorted(input_files)
-    assert args.output_dir == pathlib.Path("output")
+    assert args.output_dir == output_dir

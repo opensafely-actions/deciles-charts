@@ -66,7 +66,7 @@ def parse_args():
     parser.add_argument(
         "--output-dir",
         required=True,
-        type=pathlib.Path,
+        type=get_path,
         help="Path to the output directory",
     )
     return parser.parse_args()
