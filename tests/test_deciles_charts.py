@@ -4,43 +4,43 @@ from pandas import testing
 from analysis import deciles_charts
 
 
-class TestGetMeasureTables:
+def test_get_measure_tables(tmp_path):
     # For each measure, the measures framework writes a csv for each week/month, adding
     # the date as a suffix to the file name; and a csv for all weeks/months, adding the
     # date to a column in the file. We define a "measure table" as the latter, because
     # it's easier to work with one file, than with many files/file names. However, it's
     # hard to write a glob pattern that matches the latter but not the former, so
     # `get_measure_tables` filters `input_files`.
-    def test_measure_table(self, tmp_path):
-        # arrange
-        # this is a csv for a week/month
-        input_file_1 = tmp_path / "measure_sbp_by_practice_2021-01-01.csv"
-        input_file_1.touch()
 
-        # this is a csv for all weeks/months
-        measure_table_in = pandas.DataFrame(
-            {
-                "practice": [1],  # group_by
-                "has_sbp_event": [1],  # numerator
-                "population": [1],  # denominator
-                "value": [1],  # assigned by the measures framework
-                "date": ["2021-01-01"],  # assigned by the measures framework
-            }
-        )
-        measure_table_in["date"] = pandas.to_datetime(measure_table_in["date"])
-        input_file_2 = tmp_path / "measure_sbp_by_practice.csv"
-        measure_table_in.to_csv(input_file_2, index=False)
+    # arrange
+    # this is a csv for a week/month
+    input_file_1 = tmp_path / "measure_sbp_by_practice_2021-01-01.csv"
+    input_file_1.touch()
 
-        # act
-        measure_table_out = next(
-            deciles_charts.get_measure_tables([input_file_1, input_file_2])
-        )
+    # this is a csv for all weeks/months
+    measure_table_in = pandas.DataFrame(
+        {
+            "practice": [1],  # group_by
+            "has_sbp_event": [1],  # numerator
+            "population": [1],  # denominator
+            "value": [1],  # assigned by the measures framework
+            "date": ["2021-01-01"],  # assigned by the measures framework
+        }
+    )
+    measure_table_in["date"] = pandas.to_datetime(measure_table_in["date"])
+    input_file_2 = tmp_path / "measure_sbp_by_practice.csv"
+    measure_table_in.to_csv(input_file_2, index=False)
 
-        # assert
-        testing.assert_frame_equal(measure_table_out, measure_table_in)
-        assert measure_table_out.attrs["id"] == "sbp_by_practice"
-        assert measure_table_out.attrs["denominator"] == "population"
-        assert measure_table_out.attrs["group_by"] == ["practice"]
+    # act
+    measure_table_out = next(
+        deciles_charts.get_measure_tables([input_file_1, input_file_2])
+    )
+
+    # assert
+    testing.assert_frame_equal(measure_table_out, measure_table_in)
+    assert measure_table_out.attrs["id"] == "sbp_by_practice"
+    assert measure_table_out.attrs["denominator"] == "population"
+    assert measure_table_out.attrs["group_by"] == ["practice"]
 
 
 def test_drop_zero_denominator_rows():
