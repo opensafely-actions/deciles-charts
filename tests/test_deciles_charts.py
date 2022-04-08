@@ -32,11 +32,13 @@ def test_get_measure_tables(tmp_path):
     measure_table_in.to_csv(input_file_2, index=False)
 
     # act
-    measure_table_out = next(
+    measure_tables_out = list(
         deciles_charts.get_measure_tables([input_file_1, input_file_2])
     )
 
     # assert
+    assert len(measure_tables_out) == 1
+    measure_table_out = measure_tables_out[0]
     testing.assert_frame_equal(measure_table_out, measure_table_in)
     assert measure_table_out.attrs["id"] == "sbp_by_practice"
     assert measure_table_out.attrs["denominator"] == "population"
