@@ -42,7 +42,6 @@ def test_get_measure_tables(tmp_path):
     testing.assert_frame_equal(measure_table_out, measure_table_in)
     assert measure_table_out.attrs["id"] == "sbp_by_practice"
     assert measure_table_out.attrs["denominator"] == "population"
-    assert measure_table_out.attrs["group_by"] == ["practice"]
 
 
 def test_drop_zero_denominator_rows():

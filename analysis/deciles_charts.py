@@ -14,10 +14,6 @@ def _get_denominator(measure_table):
     return measure_table.columns[-3]
 
 
-def _get_group_by(measure_table):
-    return list(measure_table.columns[:-4])
-
-
 def get_measure_tables(input_files):
     for input_file in input_files:
         measure_fname_match = re.match(MEASURE_FNAME_REGEX, input_file.name)
@@ -29,7 +25,6 @@ def get_measure_tables(input_files):
             # the study definition.
             measure_table.attrs["id"] = measure_fname_match.group("id")
             measure_table.attrs["denominator"] = _get_denominator(measure_table)
-            measure_table.attrs["group_by"] = _get_group_by(measure_table)
 
             yield measure_table
 
