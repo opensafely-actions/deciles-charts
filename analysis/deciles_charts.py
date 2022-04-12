@@ -3,6 +3,7 @@ import glob
 import pathlib
 import re
 
+import numpy
 import pandas
 from ebmdatalab import charts
 
@@ -10,27 +11,28 @@ from ebmdatalab import charts
 MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
 
 
-def _get_denominator(measure_table):
-    return measure_table.columns[-3]
-
-
 def get_measure_tables(input_files):
     for input_file in input_files:
         measure_fname_match = re.match(MEASURE_FNAME_REGEX, input_file.name)
         if measure_fname_match is not None:
-            # The `date` column is assigned by the measures framework.
             measure_table = pandas.read_csv(input_file, parse_dates=["date"])
-
-            # We can reconstruct the parameters passed to `Measure` without
-            # the study definition.
             measure_table.attrs["id"] = measure_fname_match.group("id")
-            measure_table.attrs["denominator"] = _get_denominator(measure_table)
-
             yield measure_table
 
 
 def drop_zero_denominator_rows(measure_table):
-    mask = measure_table[measure_table.attrs["denominator"]] > 0
+    """
+    Zero-denominator rows could cause the deciles to be computed incorrectly, so should
+    be dropped beforehand. For example, a practice can have zero registered patients. If
+    the measure is computed from the number of registered patients by practice, then
+    this practice will have a denominator of zero and, consequently, a value of inf.
+    Depending on the implementation, this practice's value may be sorted as greater than
+    other practices' values, which may increase the deciles.
+    """
+    # It's non-trivial to identify the denominator column without the associated Measure
+    # instance. It's much easier to test the value column for inf, which is returned by
+    # Pandas when the second argument of a division operation is zero.
+    mask = measure_table["value"] != numpy.inf
     return measure_table[mask].reset_index(drop=True)
 
 
