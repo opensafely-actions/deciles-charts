@@ -56,7 +56,7 @@ Remember to replace `[version]` with [a deciles-charts version][4]:
 generate_deciles_charts:
   run: >
     deciles-charts:[version]
-      --input_dir output
+      --input-files output/measure_*.csv
       --output_dir output
   needs: [generate_measures]
   outputs:

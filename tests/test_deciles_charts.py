@@ -1,51 +1,48 @@
 import pandas
-import pytest
 from pandas import testing
 
 from analysis import deciles_charts
 
 
-class TestGetMeasureTables:
-    def test_path_is_not_dir(self, tmp_path):
-        tmp_file = tmp_path / "measure_sbp_by_practice.csv"
-        tmp_file.touch()
-        with pytest.raises(AttributeError):
-            next(deciles_charts.get_measure_tables(tmp_file))
+def test_get_measure_tables(tmp_path):
+    # For each measure, the measures framework writes a csv for each week/month, adding
+    # the date as a suffix to the file name; and a csv for all weeks/months, adding the
+    # date to a column in the file. We define a "measure table" as the latter, because
+    # it's easier to work with one file, than with many files/file names. However, it's
+    # hard to write a glob pattern that matches the latter but not the former, so
+    # `get_measure_tables` filters `input_files`.
 
-    def test_no_recurse(self, tmp_path):
-        tmp_sub_path = tmp_path / "measures"
-        tmp_sub_path.mkdir()
-        with pytest.raises(StopIteration):
-            next(deciles_charts.get_measure_tables(tmp_path))
+    # arrange
+    # this is a csv for a week/month
+    input_file_1 = tmp_path / "measure_sbp_by_practice_2021-01-01.csv"
+    input_file_1.touch()
 
-    def test_input_table(self, tmp_path):
-        tmp_file = tmp_path / "input_2019-01-01.csv"
-        tmp_file.touch()
-        with pytest.raises(StopIteration):
-            next(deciles_charts.get_measure_tables(tmp_path))
+    # this is a csv for all weeks/months
+    measure_table_in = pandas.DataFrame(
+        {
+            "practice": [1],  # group_by
+            "has_sbp_event": [1],  # numerator
+            "population": [1],  # denominator
+            "value": [1],  # assigned by the measures framework
+            "date": ["2021-01-01"],  # assigned by the measures framework
+        }
+    )
+    measure_table_in["date"] = pandas.to_datetime(measure_table_in["date"])
+    input_file_2 = tmp_path / "measure_sbp_by_practice.csv"
+    measure_table_in.to_csv(input_file_2, index=False)
 
-    def test_measure_table(self, tmp_path):
-        # arrange
-        measure_table_in = pandas.DataFrame(
-            {
-                "practice": [1],  # group_by
-                "has_sbp_event": [1],  # numerator
-                "population": [1],  # denominator
-                "value": [1],  # assigned by the measures framework
-                "date": ["2021-01-01"],  # assigned by the measures framework
-            }
-        )
-        measure_table_in["date"] = pandas.to_datetime(measure_table_in["date"])
-        measure_table_in.to_csv(tmp_path / "measure_sbp_by_practice.csv", index=False)
+    # act
+    measure_tables_out = list(
+        deciles_charts.get_measure_tables([input_file_1, input_file_2])
+    )
 
-        # act
-        measure_table_out = next(deciles_charts.get_measure_tables(tmp_path))
-
-        # assert
-        testing.assert_frame_equal(measure_table_out, measure_table_in)
-        assert measure_table_out.attrs["id"] == "sbp_by_practice"
-        assert measure_table_out.attrs["denominator"] == "population"
-        assert measure_table_out.attrs["group_by"] == ["practice"]
+    # assert
+    assert len(measure_tables_out) == 1
+    measure_table_out = measure_tables_out[0]
+    testing.assert_frame_equal(measure_table_out, measure_table_in)
+    assert measure_table_out.attrs["id"] == "sbp_by_practice"
+    assert measure_table_out.attrs["denominator"] == "population"
+    assert measure_table_out.attrs["group_by"] == ["practice"]
 
 
 def test_drop_zero_denominator_rows():
@@ -88,18 +85,36 @@ def test_parse_args(tmp_path, monkeypatch):
         "sys.argv",
         [
             "deciles_charts.py",
-            "--input-dir",
-            "input",
+            "--input-files",
+            "input/measure_*.csv",
             "--output-dir",
             "output",
         ],
     )
-    (tmp_path / "input").mkdir()
-    (tmp_path / "output").mkdir()
+
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    input_files = []
+    for input_file_name in [
+        "measure_has_sbp_event_by_stp_code.csv",
+        "measure_has_sbp_event_by_stp_code_2021-01-01.csv",
+        "measure_has_sbp_event_by_stp_code_2021-02-01.csv",
+        "measure_has_sbp_event_by_stp_code_2021-03-01.csv",
+        "measure_has_sbp_event_by_stp_code_2021-04-01.csv",
+        "measure_has_sbp_event_by_stp_code_2021-05-01.csv",
+        "measure_has_sbp_event_by_stp_code_2021-06-01.csv",
+    ]:
+        input_file = input_dir / input_file_name
+        input_file.touch()
+        input_files.append(input_file)
+
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
 
     # act
     args = deciles_charts.parse_args()
 
     # assert
-    args.input_dir == "input"
-    args.output_dir == "output"
+    assert sorted(args.input_files) == sorted(input_files)
+    assert args.output_dir == output_dir
