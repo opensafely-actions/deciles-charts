@@ -1,5 +1,6 @@
 import argparse
 import glob
+import logging
 import pathlib
 import re
 
@@ -9,6 +10,18 @@ from ebmdatalab import charts
 
 
 MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
+
+# replicate cohort-extractor's logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setFormatter(
+    logging.Formatter(
+        fmt="%(asctime)s [%(levelname)-9s] %(message)s [%(module)s]",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+)
+logger.addHandler(handler)
 
 
 def get_measure_tables(input_files):
@@ -32,8 +45,10 @@ def drop_zero_denominator_rows(measure_table):
     # It's non-trivial to identify the denominator column without the associated Measure
     # instance. It's much easier to test the value column for inf, which is returned by
     # Pandas when the second argument of a division operation is zero.
-    mask = measure_table["value"] != numpy.inf
-    return measure_table[mask].reset_index(drop=True)
+    is_not_inf = measure_table["value"] != numpy.inf
+    num_is_inf = len(is_not_inf) - is_not_inf.sum()
+    logger.info(f"Dropping {num_is_inf} zero-denominator rows")
+    return measure_table[is_not_inf].reset_index(drop=True)
 
 
 def get_deciles_chart(measure_table):
