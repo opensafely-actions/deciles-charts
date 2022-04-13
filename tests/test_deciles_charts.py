@@ -1,3 +1,4 @@
+import numpy
 import pandas
 from pandas import testing
 
@@ -41,8 +42,6 @@ def test_get_measure_tables(tmp_path):
     measure_table_out = measure_tables_out[0]
     testing.assert_frame_equal(measure_table_out, measure_table_in)
     assert measure_table_out.attrs["id"] == "sbp_by_practice"
-    assert measure_table_out.attrs["denominator"] == "population"
-    assert measure_table_out.attrs["group_by"] == ["practice"]
 
 
 def test_drop_zero_denominator_rows():
@@ -52,21 +51,19 @@ def test_drop_zero_denominator_rows():
             "practice": [1, 2],
             "has_sbp_event": [0, 1],
             "population": [0, 1],
-            "value": [0, 1],
+            "value": [numpy.inf, 1.0],
             "date": ["2021-01-01", "2021-01-01"],
         }
     )
-    measure_table.attrs["denominator"] = "population"
     exp_measure_table = pandas.DataFrame(
         {
             "practice": [2],
             "has_sbp_event": [1],
             "population": [1],
-            "value": [1],
+            "value": [1.0],
             "date": ["2021-01-01"],
         }
     )
-    exp_measure_table.attrs["denominator"] = "population"
 
     # act
     obs_measure_table = deciles_charts.drop_zero_denominator_rows(measure_table)

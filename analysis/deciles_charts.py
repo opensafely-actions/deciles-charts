@@ -1,42 +1,54 @@
 import argparse
 import glob
+import logging
 import pathlib
 import re
 
+import numpy
 import pandas
 from ebmdatalab import charts
 
 
 MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
 
-
-def _get_denominator(measure_table):
-    return measure_table.columns[-3]
-
-
-def _get_group_by(measure_table):
-    return list(measure_table.columns[:-4])
+# replicate cohort-extractor's logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setFormatter(
+    logging.Formatter(
+        fmt="%(asctime)s [%(levelname)-9s] %(message)s [%(module)s]",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+)
+logger.addHandler(handler)
 
 
 def get_measure_tables(input_files):
     for input_file in input_files:
         measure_fname_match = re.match(MEASURE_FNAME_REGEX, input_file.name)
         if measure_fname_match is not None:
-            # The `date` column is assigned by the measures framework.
             measure_table = pandas.read_csv(input_file, parse_dates=["date"])
-
-            # We can reconstruct the parameters passed to `Measure` without
-            # the study definition.
             measure_table.attrs["id"] = measure_fname_match.group("id")
-            measure_table.attrs["denominator"] = _get_denominator(measure_table)
-            measure_table.attrs["group_by"] = _get_group_by(measure_table)
-
             yield measure_table
 
 
 def drop_zero_denominator_rows(measure_table):
-    mask = measure_table[measure_table.attrs["denominator"]] > 0
-    return measure_table[mask].reset_index(drop=True)
+    """
+    Zero-denominator rows could cause the deciles to be computed incorrectly, so should
+    be dropped beforehand. For example, a practice can have zero registered patients. If
+    the measure is computed from the number of registered patients by practice, then
+    this practice will have a denominator of zero and, consequently, a value of inf.
+    Depending on the implementation, this practice's value may be sorted as greater than
+    other practices' values, which may increase the deciles.
+    """
+    # It's non-trivial to identify the denominator column without the associated Measure
+    # instance. It's much easier to test the value column for inf, which is returned by
+    # Pandas when the second argument of a division operation is zero.
+    is_not_inf = measure_table["value"] != numpy.inf
+    num_is_inf = len(is_not_inf) - is_not_inf.sum()
+    logger.info(f"Dropping {num_is_inf} zero-denominator rows")
+    return measure_table[is_not_inf].reset_index(drop=True)
 
 
 def get_deciles_chart(measure_table):
