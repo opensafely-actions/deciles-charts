@@ -56,7 +56,7 @@ def get_deciles_chart(measure_table):
 
 
 def write_deciles_chart(deciles_chart, path):
-    deciles_chart.savefig(path)
+    deciles_chart.savefig(path, bbox_inches="tight")
 
 
 def get_path(*args):
