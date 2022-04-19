@@ -7,7 +7,7 @@ outer percentiles are plotted as dotted lines;
 the median is plotted as a solid line.
 For example, the following deciles chart was generated from dummy data:
 
-![A deciles chart generated from dummy data](img/deciles_chart_has_sbp_event_by_population.png)
+![A deciles chart generated from dummy data](img/deciles_chart_has_sbp_event_by_stp_code.png)
 
 [Using deciles to communicate variation][2] has several advantages when compared to the alternatives.
 Consequently, deciles charts are used on [OpenPrescribing.net][]
