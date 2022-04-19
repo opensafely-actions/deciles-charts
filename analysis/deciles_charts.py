@@ -85,7 +85,7 @@ def parse_args():
         "--show-outer-percentiles",
         required=False,
         default=False,
-        actions="store_true",
+        action="store_true",
         help="Show the outer percentiles (1-9 & 91-99)"
     )
     return parser.parse_args()
