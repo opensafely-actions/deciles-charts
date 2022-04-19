@@ -81,6 +81,13 @@ def parse_args():
         type=get_path,
         help="Path to the output directory",
     )
+    parser.add_argument(
+        "--show-outer-percentiles",
+        required=False,
+        default=False,
+        actions="store_true",
+        help="Show the outer percentiles (1-9 & 91-99)"
+    )
     return parser.parse_args()
 
 
@@ -88,6 +95,7 @@ def main():
     args = parse_args()
     input_files = args.input_files
     output_dir = args.output_dir
+    show_outer_percentiles=args.show_outer_percentiles
 
     for measure_table in get_measure_tables(input_files):
         measure_table = drop_zero_denominator_rows(measure_table)
