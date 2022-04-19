@@ -29,6 +29,7 @@ actions:
       python:latest analysis/deciles_charts.py
         --input-files output/measure_*.csv
         --output-dir output
+        --show-outer-percentiles
     needs: [generate_measures]
     outputs:
       moderately_sensitive:
