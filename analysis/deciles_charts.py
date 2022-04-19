@@ -51,8 +51,8 @@ def drop_zero_denominator_rows(measure_table):
     return measure_table[is_not_inf].reset_index(drop=True)
 
 
-def get_deciles_chart(measure_table):
-    return charts.deciles_chart(measure_table, period_column="date", column="value")
+def get_deciles_chart(measure_table, show_outer_percentiles):
+    return charts.deciles_chart(measure_table, period_column="date", column="value", show_outer_percentiles=show_outer_percentiles)
 
 
 def write_deciles_chart(deciles_chart, path):
@@ -99,7 +99,7 @@ def main():
 
     for measure_table in get_measure_tables(input_files):
         measure_table = drop_zero_denominator_rows(measure_table)
-        chart = get_deciles_chart(measure_table)
+        chart = get_deciles_chart(measure_table, show_outer_percentiles=show_outer_percentiles)
         id_ = measure_table.attrs["id"]
         fname = f"deciles_chart_{id_}.png"
         write_deciles_chart(chart, output_dir / fname)
