@@ -1,5 +1,6 @@
 import argparse
 import glob
+import json
 import logging
 import pathlib
 import re
@@ -8,6 +9,10 @@ import numpy
 import pandas
 from ebmdatalab import charts
 
+
+DEFAULT_CONFIG = {
+    "show_outer_percentiles": False,
+}
 
 MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
 
@@ -51,8 +56,13 @@ def drop_zero_denominator_rows(measure_table):
     return measure_table[is_not_inf].reset_index(drop=True)
 
 
-def get_deciles_chart(measure_table):
-    return charts.deciles_chart(measure_table, period_column="date", column="value")
+def get_deciles_chart(measure_table, config):
+    return charts.deciles_chart(
+        measure_table,
+        period_column="date",
+        column="value",
+        show_outer_percentiles=config["show_outer_percentiles"],
+    )
 
 
 def write_deciles_chart(deciles_chart, path):
@@ -65,6 +75,17 @@ def get_path(*args):
 
 def match_paths(pattern):
     return [get_path(x) for x in glob.glob(pattern)]
+
+
+def parse_config(config_json):
+    user_config = json.loads(config_json)
+    config = DEFAULT_CONFIG.copy()
+    if invalid_keys := [k for k in user_config if k not in config]:
+        invalid_keys_str = ", ".join(invalid_keys)
+        raise RuntimeError(f"Invalid configuration: {invalid_keys_str}")
+
+    config.update(user_config)
+    return config
 
 
 def parse_args():
@@ -81,6 +102,12 @@ def parse_args():
         type=get_path,
         help="Path to the output directory",
     )
+    parser.add_argument(
+        "--config",
+        default=DEFAULT_CONFIG.copy(),
+        type=parse_config,
+        help="JSON-encoded configuration",
+    )
     return parser.parse_args()
 
 
@@ -88,10 +115,11 @@ def main():
     args = parse_args()
     input_files = args.input_files
     output_dir = args.output_dir
+    config = args.config
 
     for measure_table in get_measure_tables(input_files):
         measure_table = drop_zero_denominator_rows(measure_table)
-        chart = get_deciles_chart(measure_table)
+        chart = get_deciles_chart(measure_table, config)
         id_ = measure_table.attrs["id"]
         fname = f"deciles_chart_{id_}.png"
         write_deciles_chart(chart, output_dir / fname)
