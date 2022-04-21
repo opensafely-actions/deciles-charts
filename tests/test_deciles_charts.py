@@ -1,5 +1,6 @@
 import numpy
 import pandas
+import pytest
 from pandas import testing
 
 from analysis import deciles_charts
@@ -75,7 +76,25 @@ def test_drop_zero_denominator_rows():
     assert obs_measure_table.attrs is not measure_table.attrs  # test it's a copy
 
 
-def test_parse_args(tmp_path, monkeypatch):
+def test_parse_config():
+    with pytest.raises(RuntimeError, match=r"bad_key, worse_key$"):
+        deciles_charts.parse_config('{"bad_key": "", "worse_key": ""}')
+
+
+@pytest.mark.parametrize(
+    "optional_arg,parsed_optional_arg",
+    [
+        (
+            (),
+            ("config", {"show_outer_percentiles": False}),  # default
+        ),
+        (
+            ("--config", '{"show_outer_percentiles": true}'),
+            ("config", {"show_outer_percentiles": True}),
+        ),
+    ],
+)
+def test_parse_args(tmp_path, monkeypatch, optional_arg, parsed_optional_arg):
     # arrange
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(
@@ -86,7 +105,8 @@ def test_parse_args(tmp_path, monkeypatch):
             "input/measure_*.csv",
             "--output-dir",
             "output",
-        ],
+        ]
+        + list(optional_arg),
     )
 
     input_dir = tmp_path / "input"
@@ -115,3 +135,4 @@ def test_parse_args(tmp_path, monkeypatch):
     # assert
     assert sorted(args.input_files) == sorted(input_files)
     assert args.output_dir == output_dir
+    assert getattr(args, parsed_optional_arg[0]) == parsed_optional_arg[1]

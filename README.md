@@ -3,7 +3,6 @@
 deciles-charts generates a line chart for each [measure table][1] in an input directory.
 The line chart has time on the horizontal axis (`x`) and value on the vertical axis (`y`).
 Deciles are plotted as dashed lines;
-outer percentiles are plotted as dotted lines;
 the median is plotted as a solid line.
 For example, the following deciles chart was generated from dummy data:
 
@@ -67,6 +66,29 @@ generate_deciles_charts:
 For each measure table, there will now be a corresponding deciles chart.
 For example, given a measure table called `measure_has_sbp_event_by_stp_code.csv`,
 there will now be a corresponding deciles chart called `deciles_chart_has_sbp_event_by_stp_code.png`.
+
+## Configuration
+
+Pass configuration via the `config` property.
+For example:
+
+```yaml
+generate_deciles_charts:
+  run: >
+    deciles-charts:[version]
+      --input-files output/measure_*.csv
+      --output_dir output
+  config:
+    show_outer_percentiles: true
+  needs: [generate_measures]
+  outputs:
+    moderately_sensitive:
+      deciles_charts: output/deciles_chart_*.png
+```
+
+| Configuration            | Default | Description                                                 |
+| ------------------------ | ------- | ----------------------------------------------------------- |
+| `show_outer_percentiles` | `false` | Show the top and bottom percentiles, as well as the deciles |
 
 ## Notes for developers
 
