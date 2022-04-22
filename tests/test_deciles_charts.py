@@ -125,6 +125,7 @@ class TestParseArgs:
         assert sorted(args.input_files) == sorted(input_files)
         assert args.output_dir == output_dir
         assert args.config == deciles_charts.DEFAULT_CONFIG
+        assert args.config is not deciles_charts.DEFAULT_CONFIG  # it is a copy
 
     def test_optional_config_arg(self, monkeypatch):
         # arrange
