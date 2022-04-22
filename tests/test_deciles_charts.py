@@ -77,7 +77,7 @@ def test_drop_zero_denominator_rows():
 
 
 def test_parse_config():
-    with pytest.raises(RuntimeError, match=r"bad_key, worse_key$"):
+    with pytest.raises(RuntimeError):
         deciles_charts.parse_config('{"bad_key": "", "worse_key": ""}')
 
 

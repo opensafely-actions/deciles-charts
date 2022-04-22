@@ -5,6 +5,7 @@ import logging
 import pathlib
 import re
 
+import jsonschema
 import numpy
 import pandas
 from ebmdatalab import charts
@@ -25,6 +26,14 @@ logger.addHandler(handler)
 
 DEFAULT_CONFIG = {
     "show_outer_percentiles": False,
+}
+
+CONFIG_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "show_outer_percentiles": {"type": "boolean"},
+    },
 }
 
 MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
@@ -81,11 +90,11 @@ def match_paths(pattern):
 def parse_config(config_json):
     user_config = json.loads(config_json)
     config = DEFAULT_CONFIG.copy()
-    if invalid_keys := [k for k in user_config if k not in config]:
-        invalid_keys_str = ", ".join(invalid_keys)
-        raise RuntimeError(f"Invalid configuration: {invalid_keys_str}")
-
     config.update(user_config)
+    try:
+        jsonschema.validate(config, CONFIG_SCHEMA)
+    except jsonschema.ValidationError as e:
+        raise RuntimeError(e.message) from e
     return config
 
 
