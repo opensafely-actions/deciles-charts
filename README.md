@@ -56,7 +56,7 @@ generate_deciles_charts:
   run: >
     deciles-charts:[version]
       --input-files output/measure_*.csv
-      --output_dir output
+      --output-dir output
   needs: [generate_measures]
   outputs:
     moderately_sensitive:
@@ -77,18 +77,21 @@ generate_deciles_charts:
   run: >
     deciles-charts:[version]
       --input-files output/measure_*.csv
-      --output_dir output
+      --output-dir output
   config:
-    show_outer_percentiles: true
+    show_outer_percentiles: false
+    charts:
+      output: true
   needs: [generate_measures]
   outputs:
     moderately_sensitive:
       deciles_charts: output/deciles_chart_*.png
 ```
 
-| Configuration            | Default | Description                                                 |
-| ------------------------ | ------- | ----------------------------------------------------------- |
-| `show_outer_percentiles` | `false` | Show the top and bottom percentiles, as well as the deciles |
+| Configuration            | Description                                                                                         |
+| ------------------------ | --------------------------------------------------------------------------------------------------- |
+| `show_outer_percentiles` | Show the top and bottom percentiles, as well as the deciles                                         |
+| `charts.output`          | Generate a deciles chart for each measure table that is matched by the `--input-files` glob pattern |
 
 ## Notes for developers
 

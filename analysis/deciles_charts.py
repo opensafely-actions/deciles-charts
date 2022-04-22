@@ -26,6 +26,9 @@ logger.addHandler(handler)
 
 DEFAULT_CONFIG = {
     "show_outer_percentiles": False,
+    "charts": {
+        "output": True,
+    },
 }
 
 CONFIG_SCHEMA = {
@@ -33,6 +36,13 @@ CONFIG_SCHEMA = {
     "additionalProperties": False,
     "properties": {
         "show_outer_percentiles": {"type": "boolean"},
+        "charts": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "output": {"type": "boolean"},
+            },
+        },
     },
 }
 
@@ -129,10 +139,11 @@ def main():
 
     for measure_table in get_measure_tables(input_files):
         measure_table = drop_zero_denominator_rows(measure_table)
-        chart = get_deciles_chart(measure_table, config)
-        id_ = measure_table.attrs["id"]
-        fname = f"deciles_chart_{id_}.png"
-        write_deciles_chart(chart, output_dir / fname)
+        if config["charts"]["output"]:
+            chart = get_deciles_chart(measure_table, config)
+            id_ = measure_table.attrs["id"]
+            fname = f"deciles_chart_{id_}.png"
+            write_deciles_chart(chart, output_dir / fname)
 
 
 if __name__ == "__main__":
