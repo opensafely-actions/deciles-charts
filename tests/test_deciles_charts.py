@@ -83,20 +83,7 @@ def test_parse_config():
         deciles_charts.parse_config('{"bad_key": "", "worse_key": ""}')
 
 
-@pytest.mark.parametrize(
-    "optional_arg,parsed_optional_arg",
-    [
-        (
-            (),
-            ("config", {"show_outer_percentiles": False}),  # default
-        ),
-        (
-            ("--config", '{"show_outer_percentiles": true}'),
-            ("config", {"show_outer_percentiles": True}),
-        ),
-    ],
-)
-def test_parse_args(tmp_path, monkeypatch, optional_arg, parsed_optional_arg):
+def test_parse_args(tmp_path, monkeypatch):
     # arrange
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(
@@ -107,8 +94,7 @@ def test_parse_args(tmp_path, monkeypatch, optional_arg, parsed_optional_arg):
             "input/measure_*.csv",
             "--output-dir",
             "output",
-        ]
-        + list(optional_arg),
+        ],
     )
 
     input_dir = tmp_path / "input"
@@ -137,4 +123,26 @@ def test_parse_args(tmp_path, monkeypatch, optional_arg, parsed_optional_arg):
     # assert
     assert sorted(args.input_files) == sorted(input_files)
     assert args.output_dir == output_dir
-    assert getattr(args, parsed_optional_arg[0]) == parsed_optional_arg[1]
+    assert args.config == deciles_charts.DEFAULT_CONFIG
+
+
+def test_parse_args_config_arg(monkeypatch):
+    # arrange
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "deciles_charts.py",
+            "--input-files",
+            "input/measure_*.csv",
+            "--output-dir",
+            "output",
+            "--config",
+            '{"show_outer_percentiles": true}',
+        ],
+    )
+
+    # act
+    args = deciles_charts.parse_args()
+
+    # assert
+    assert args.config["show_outer_percentiles"]
