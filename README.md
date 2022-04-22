@@ -56,7 +56,7 @@ generate_deciles_charts:
   run: >
     deciles-charts:[version]
       --input-files output/measure_*.csv
-      --output_dir output
+      --output-dir output
   needs: [generate_measures]
   outputs:
     moderately_sensitive:
@@ -77,7 +77,7 @@ generate_deciles_charts:
   run: >
     deciles-charts:[version]
       --input-files output/measure_*.csv
-      --output_dir output
+      --output-dir output
   config:
     show_outer_percentiles: true
   needs: [generate_measures]
