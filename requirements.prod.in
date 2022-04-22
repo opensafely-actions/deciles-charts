@@ -4,4 +4,5 @@
 # pip-compile --generate-hashes --output-file=requirements.prod.txt requirements.prod.in
 
 ebmdatalab==0.0.21
+jsonschema==3.2.0
 pandas==1.0.1
