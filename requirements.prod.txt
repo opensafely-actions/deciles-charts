@@ -7,7 +7,9 @@
 attrs==21.4.0 \
     --hash=sha256:2d27e3784d7a565d36ab851fe94887c5eccd6a463168875832a1be79c82828b4 \
     --hash=sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd
-    # via fiona
+    # via
+    #   fiona
+    #   jsonschema
 cachetools==5.0.0 \
     --hash=sha256:486471dfa8799eb7ec503a8059e263db000cdda20075ce5e48903087f79d5fd6 \
     --hash=sha256:8fecd4203a38af17928be7b90689d8083603073622229ca7077b72d8e5a976e4
@@ -223,6 +225,10 @@ idna==3.3 \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
     --hash=sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d
     # via requests
+jsonschema==3.2.0 \
+    --hash=sha256:4e5b3cf8216f577bee9ce139cbe72eca3ea4f292ec60928ff24758ce626cd163 \
+    --hash=sha256:c8a85b28d377cc7737e46e2d9f2b4f44ee3c0e1deac6bf46ddefc7187d30797a
+    # via -r requirements.prod.in
 kiwisolver==1.4.0 \
     --hash=sha256:139c75216e5875ee5f8f4f7adcc3cd339f46f0d66bda2e10d8d21386d635476f \
     --hash=sha256:14f43edc25daa0646d4b4e86c2ebdd32d785ab73a65a570130a3d234a4554b07 \
@@ -542,6 +548,29 @@ pyproj==3.3.0 \
     --hash=sha256:eca8ecf2b6b3225d93c723e6a2f51143d9195ac407f69e979363cdde344b93bb \
     --hash=sha256:fcceb6736085bf19291b707bc67c8cebe05330bd02268e9b8eba6d28a1905fce
     # via geopandas
+pyrsistent==0.18.1 \
+    --hash=sha256:0e3e1fcc45199df76053026a51cc59ab2ea3fc7c094c6627e93b7b44cdae2c8c \
+    --hash=sha256:1b34eedd6812bf4d33814fca1b66005805d3640ce53140ab8bbb1e2651b0d9bc \
+    --hash=sha256:4ed6784ceac462a7d6fcb7e9b663e93b9a6fb373b7f43594f9ff68875788e01e \
+    --hash=sha256:5d45866ececf4a5fff8742c25722da6d4c9e180daa7b405dc0a2a2790d668c26 \
+    --hash=sha256:636ce2dc235046ccd3d8c56a7ad54e99d5c1cd0ef07d9ae847306c91d11b5fec \
+    --hash=sha256:6455fc599df93d1f60e1c5c4fe471499f08d190d57eca040c0ea182301321286 \
+    --hash=sha256:6bc66318fb7ee012071b2792024564973ecc80e9522842eb4e17743604b5e045 \
+    --hash=sha256:7bfe2388663fd18bd8ce7db2c91c7400bf3e1a9e8bd7d63bf7e77d39051b85ec \
+    --hash=sha256:7ec335fc998faa4febe75cc5268a9eac0478b3f681602c1f27befaf2a1abe1d8 \
+    --hash=sha256:914474c9f1d93080338ace89cb2acee74f4f666fb0424896fcfb8d86058bf17c \
+    --hash=sha256:b568f35ad53a7b07ed9b1b2bae09eb15cdd671a5ba5d2c66caee40dbf91c68ca \
+    --hash=sha256:cdfd2c361b8a8e5d9499b9082b501c452ade8bbf42aef97ea04854f4a3f43b22 \
+    --hash=sha256:d1b96547410f76078eaf66d282ddca2e4baae8964364abb4f4dcdde855cd123a \
+    --hash=sha256:d4d61f8b993a7255ba714df3aca52700f8125289f84f704cf80916517c46eb96 \
+    --hash=sha256:d7a096646eab884bf8bed965bad63ea327e0d0c38989fc83c5ea7b8a87037bfc \
+    --hash=sha256:df46c854f490f81210870e509818b729db4488e1f30f2a1ce1698b2295a878d1 \
+    --hash=sha256:e24a828f57e0c337c8d8bb9f6b12f09dfdf0273da25fda9e314f0b684b415a07 \
+    --hash=sha256:e4f3149fd5eb9b285d6bfb54d2e5173f6a116fe19172686797c056672689daf6 \
+    --hash=sha256:e92a52c166426efbe0d1ec1332ee9119b6d32fc1f0bbfd55d5c1088070e7fc1b \
+    --hash=sha256:f87cc2863ef33c709e237d4b5f4502a62a00fab450c9e020892e8e2ede5847f5 \
+    --hash=sha256:fd8da6d0124efa2f67d86fa70c851022f87c98e205f0594e1fae044e7119a5a6
+    # via jsonschema
 python-dateutil==2.8.2 \
     --hash=sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86 \
     --hash=sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9
@@ -634,6 +663,7 @@ six==1.16.0 \
     #   fiona
     #   google-auth
     #   grpcio
+    #   jsonschema
     #   munch
     #   patsy
     #   python-dateutil
@@ -673,5 +703,6 @@ setuptools==60.10.0 \
     --hash=sha256:782ef48d58982ddb49920c11a0c5c9c0b02e7d7d1c2ad0aa44e1a1e133051c96
     # via
     #   fiona
+    #   jsonschema
     #   pandas-gbq
     #   pydata-google-auth
