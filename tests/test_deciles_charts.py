@@ -83,66 +83,66 @@ def test_parse_config():
         deciles_charts.parse_config('{"bad_key": "", "worse_key": ""}')
 
 
-def test_parse_args(tmp_path, monkeypatch):
-    # arrange
-    monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(
-        "sys.argv",
-        [
-            "deciles_charts.py",
-            "--input-files",
-            "input/measure_*.csv",
-            "--output-dir",
-            "output",
-        ],
-    )
+class TestParseArgs:
+    def test_positional_args_and_default_optional_args(self, tmp_path, monkeypatch):
+        # arrange
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(
+            "sys.argv",
+            [
+                "deciles_charts.py",
+                "--input-files",
+                "input/measure_*.csv",
+                "--output-dir",
+                "output",
+            ],
+        )
 
-    input_dir = tmp_path / "input"
-    input_dir.mkdir()
+        input_dir = tmp_path / "input"
+        input_dir.mkdir()
 
-    input_files = []
-    for input_file_name in [
-        "measure_has_sbp_event_by_stp_code.csv",
-        "measure_has_sbp_event_by_stp_code_2021-01-01.csv",
-        "measure_has_sbp_event_by_stp_code_2021-02-01.csv",
-        "measure_has_sbp_event_by_stp_code_2021-03-01.csv",
-        "measure_has_sbp_event_by_stp_code_2021-04-01.csv",
-        "measure_has_sbp_event_by_stp_code_2021-05-01.csv",
-        "measure_has_sbp_event_by_stp_code_2021-06-01.csv",
-    ]:
-        input_file = input_dir / input_file_name
-        input_file.touch()
-        input_files.append(input_file)
+        input_files = []
+        for input_file_name in [
+            "measure_has_sbp_event_by_stp_code.csv",
+            "measure_has_sbp_event_by_stp_code_2021-01-01.csv",
+            "measure_has_sbp_event_by_stp_code_2021-02-01.csv",
+            "measure_has_sbp_event_by_stp_code_2021-03-01.csv",
+            "measure_has_sbp_event_by_stp_code_2021-04-01.csv",
+            "measure_has_sbp_event_by_stp_code_2021-05-01.csv",
+            "measure_has_sbp_event_by_stp_code_2021-06-01.csv",
+        ]:
+            input_file = input_dir / input_file_name
+            input_file.touch()
+            input_files.append(input_file)
 
-    output_dir = tmp_path / "output"
-    output_dir.mkdir()
+        output_dir = tmp_path / "output"
+        output_dir.mkdir()
 
-    # act
-    args = deciles_charts.parse_args()
+        # act
+        args = deciles_charts.parse_args()
 
-    # assert
-    assert sorted(args.input_files) == sorted(input_files)
-    assert args.output_dir == output_dir
-    assert args.config == deciles_charts.DEFAULT_CONFIG
+        # assert
+        assert sorted(args.input_files) == sorted(input_files)
+        assert args.output_dir == output_dir
+        assert args.config == deciles_charts.DEFAULT_CONFIG
 
+    def test_optional_config_arg(self, monkeypatch):
+        # arrange
+        monkeypatch.setattr(
+            "sys.argv",
+            [
+                "deciles_charts.py",
+                "--input-files",
+                "input/measure_*.csv",
+                "--output-dir",
+                "output",
+                "--config",
+                '{"show_outer_percentiles": true}',
+            ],
+        )
 
-def test_parse_args_config_arg(monkeypatch):
-    # arrange
-    monkeypatch.setattr(
-        "sys.argv",
-        [
-            "deciles_charts.py",
-            "--input-files",
-            "input/measure_*.csv",
-            "--output-dir",
-            "output",
-            "--config",
-            '{"show_outer_percentiles": true}',
-        ],
-    )
+        # act
+        args = deciles_charts.parse_args()
 
-    # act
-    args = deciles_charts.parse_args()
-
-    # assert
-    assert args.config["show_outer_percentiles"]
+        # assert
+        assert args.config["show_outer_percentiles"]
