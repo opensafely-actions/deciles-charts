@@ -94,7 +94,7 @@ def parse_config(config_json):
     try:
         jsonschema.validate(config, CONFIG_SCHEMA)
     except jsonschema.ValidationError as e:
-        raise RuntimeError(e.message) from e
+        raise argparse.ArgumentTypeError(e.message) from e
     return config
 
 

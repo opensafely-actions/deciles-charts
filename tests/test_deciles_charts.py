@@ -1,3 +1,5 @@
+import argparse
+
 import numpy
 import pandas
 import pytest
@@ -77,7 +79,7 @@ def test_drop_zero_denominator_rows():
 
 
 def test_parse_config():
-    with pytest.raises(RuntimeError):
+    with pytest.raises(argparse.ArgumentTypeError):
         deciles_charts.parse_config('{"bad_key": "", "worse_key": ""}')
 
 
