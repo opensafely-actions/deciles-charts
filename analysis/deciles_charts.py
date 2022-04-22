@@ -10,12 +10,6 @@ import pandas
 from ebmdatalab import charts
 
 
-DEFAULT_CONFIG = {
-    "show_outer_percentiles": False,
-}
-
-MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
-
 # replicate cohort-extractor's logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -27,6 +21,13 @@ handler.setFormatter(
     )
 )
 logger.addHandler(handler)
+
+
+DEFAULT_CONFIG = {
+    "show_outer_percentiles": False,
+}
+
+MEASURE_FNAME_REGEX = re.compile(r"measure_(?P<id>\w+)\.csv")
 
 
 def get_measure_tables(input_files):
