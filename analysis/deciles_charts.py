@@ -26,6 +26,9 @@ logger.addHandler(handler)
 
 DEFAULT_CONFIG = {
     "show_outer_percentiles": False,
+    "tables": {
+        "output": True,
+    },
     "charts": {
         "output": True,
     },
@@ -36,6 +39,13 @@ CONFIG_SCHEMA = {
     "additionalProperties": False,
     "properties": {
         "show_outer_percentiles": {"type": "boolean"},
+        "tables": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "output": {"type": "boolean"},
+            },
+        },
         "charts": {
             "type": "object",
             "additionalProperties": False,
@@ -74,6 +84,19 @@ def drop_zero_denominator_rows(measure_table):
     num_is_inf = len(is_not_inf) - is_not_inf.sum()
     logger.info(f"Dropping {num_is_inf} zero-denominator rows")
     return measure_table[is_not_inf].reset_index(drop=True)
+
+
+def get_deciles_table(measure_table, config):
+    return charts.add_percentiles(
+        measure_table,
+        period_column="date",
+        column="value",
+        show_outer_percentiles=config["show_outer_percentiles"],
+    )
+
+
+def write_deciles_table(deciles_table, path):
+    deciles_table.to_csv(path, index=False)
 
 
 def get_deciles_chart(measure_table, config):
@@ -139,9 +162,14 @@ def main():
 
     for measure_table in get_measure_tables(input_files):
         measure_table = drop_zero_denominator_rows(measure_table)
+        id_ = measure_table.attrs["id"]
+        if config["tables"]["output"]:
+            deciles_table = get_deciles_table(measure_table, config)
+            fname = f"deciles_table_{id_}.csv"
+            write_deciles_table(deciles_table, output_dir / fname)
+
         if config["charts"]["output"]:
             chart = get_deciles_chart(measure_table, config)
-            id_ = measure_table.attrs["id"]
             fname = f"deciles_chart_{id_}.png"
             write_deciles_chart(chart, output_dir / fname)
 

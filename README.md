@@ -1,7 +1,8 @@
 # deciles-charts
 
-deciles-charts generates a line chart for each [measure table][1] in an input directory.
-The line chart has time on the horizontal axis (`x`) and value on the vertical axis (`y`).
+deciles-charts generates a table and a line chart for each [measure table][1] in an input directory.
+The table has date, percentile, and value columns.
+The line chart has date on the horizontal axis (`x`) and value on the vertical axis (`y`).
 Deciles are plotted as dashed lines;
 the median is plotted as a solid line.
 For example, the following deciles chart was generated from dummy data:
@@ -48,7 +49,7 @@ generate_measures:
       measure: output/measure_*.csv
 ```
 
-Finally, the following deciles-charts reusable action generates a deciles chart for each measure table.
+Finally, the following deciles-charts reusable action generates a deciles table and a deciles chart for each measure table.
 Remember to replace `[version]` with [a deciles-charts version][4]:
 
 ```yaml
@@ -60,12 +61,14 @@ generate_deciles_charts:
   needs: [generate_measures]
   outputs:
     moderately_sensitive:
-      deciles_charts: output/deciles_chart_*.png
+      deciles_charts: output/deciles_*_*.*
 ```
 
-For each measure table, there will now be a corresponding deciles chart.
+For each measure table, there will now be a deciles table and deciles chart.
 For example, given a measure table called `measure_has_sbp_event_by_stp_code.csv`,
-there will now be a corresponding deciles chart called `deciles_chart_has_sbp_event_by_stp_code.png`.
+there will now be
+a deciles table called `deciles_table_has_sbp_event_by_stp_code.csv` and
+a deciles chart called `deciles_chart_has_sbp_event_by_stp_code.png`.
 
 ## Configuration
 
@@ -80,17 +83,20 @@ generate_deciles_charts:
       --output-dir output
   config:
     show_outer_percentiles: false
+    tables:
+      output: true
     charts:
       output: true
   needs: [generate_measures]
   outputs:
     moderately_sensitive:
-      deciles_charts: output/deciles_chart_*.png
+      deciles_charts: output/deciles_*_*.*
 ```
 
 | Configuration            | Description                                                                                         |
 | ------------------------ | --------------------------------------------------------------------------------------------------- |
 | `show_outer_percentiles` | Show the top and bottom percentiles, as well as the deciles                                         |
+| `tables.output`          | Generate a deciles table for each measure table that is matched by the `--input-files` glob pattern |
 | `charts.output`          | Generate a deciles chart for each measure table that is matched by the `--input-files` glob pattern |
 
 ## Notes for developers

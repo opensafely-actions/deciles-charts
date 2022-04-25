@@ -31,9 +31,11 @@ actions:
         --output-dir output
     config:
       show_outer_percentiles: false
+      tables:
+        output: true
       charts:
         output: true
     needs: [generate_measures]
     outputs:
       moderately_sensitive:
-        deciles_charts: output/deciles_chart_*.png
+        deciles_charts: output/deciles_*_*.*
