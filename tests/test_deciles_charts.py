@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import numpy
 import pandas
@@ -76,6 +77,12 @@ def test_drop_zero_denominator_rows():
     assert obs_measure_table.attrs == exp_measure_table.attrs
     assert obs_measure_table is not measure_table  # test it's a copy
     assert obs_measure_table.attrs is not measure_table.attrs  # test it's a copy
+
+
+def test_create_dir(tmp_path):
+    new_path = tmp_path / "output/ID123"
+    deciles_charts.create_dir(new_path)
+    assert os.path.exists(new_path)
 
 
 def test_parse_config():
