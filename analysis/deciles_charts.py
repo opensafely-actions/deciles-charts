@@ -95,8 +95,9 @@ def get_deciles_table(measure_table, config):
     )
 
 
-def write_deciles_table(deciles_table, path):
-    deciles_table.to_csv(path, index=False)
+def write_deciles_table(deciles_table, path, filename):
+    create_dir(path)
+    deciles_table.to_csv(path / filename, index=False)
 
 
 def get_deciles_chart(measure_table, config):
@@ -108,8 +109,13 @@ def get_deciles_chart(measure_table, config):
     )
 
 
-def write_deciles_chart(deciles_chart, path):
-    deciles_chart.savefig(path, bbox_inches="tight")
+def write_deciles_chart(deciles_chart, path, filename):
+    create_dir(path)
+    deciles_chart.savefig(path / filename, bbox_inches="tight")
+
+
+def create_dir(path):
+    pathlib.Path(path).mkdir(parents=True, exist_ok=True)
 
 
 def get_path(*args):
@@ -166,12 +172,12 @@ def main():
         if config["tables"]["output"]:
             deciles_table = get_deciles_table(measure_table, config)
             fname = f"deciles_table_{id_}.csv"
-            write_deciles_table(deciles_table, output_dir / fname)
+            write_deciles_table(deciles_table, output_dir, fname)
 
         if config["charts"]["output"]:
             chart = get_deciles_chart(measure_table, config)
             fname = f"deciles_chart_{id_}.png"
-            write_deciles_chart(chart, output_dir / fname)
+            write_deciles_chart(chart, output_dir, fname)
 
 
 if __name__ == "__main__":
