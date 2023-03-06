@@ -230,9 +230,9 @@ pluggy==1.0.0 \
     --hash=sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159 \
     --hash=sha256:74134bbf457f031a36d68416e1509f34bd5ccc019f0bcc952c7b909d06b37bd3
     # via pytest
-pre-commit==2.20.0 \
-    --hash=sha256:51a5ba7c480ae8072ecdb6933df22d2f812dc897d5fe848778116129a681aac7 \
-    --hash=sha256:a978dac7bc9ec0bcee55c18a277d553b0f419d259dadb4b9418ff2d00eb43959
+pre-commit==3.1.1 \
+    --hash=sha256:b80254e60668e1dd1f5c03a1c9e0413941d61f568a57d745add265945f65bfe8 \
+    --hash=sha256:d63e6537f9252d99f65755ae5b79c989b462d511ebbc481b561db6a297e1e865
     # via -r requirements.dev.in
 prompt-toolkit==3.0.28 \
     --hash=sha256:30129d870dcb0b3b6a53efdc9d0a83ea96162ffd28ffe077e94215b233dc670c \
@@ -337,10 +337,6 @@ stack-data==0.2.0 \
     --hash=sha256:45692d41bd633a9503a5195552df22b583caf16f0b27c4e58c98d88c8b648e12 \
     --hash=sha256:999762f9c3132308789affa03e9271bbbe947bf78311851f4d485d8402ed858e
     # via ipython
-toml==0.10.2 \
-    --hash=sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b \
-    --hash=sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f
-    # via pre-commit
 tomli==2.0.1 \
     --hash=sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc \
     --hash=sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f
