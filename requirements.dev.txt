@@ -157,9 +157,9 @@ iniconfig==1.1.1 \
     --hash=sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3 \
     --hash=sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32
     # via pytest
-ipython==8.4.0 \
-    --hash=sha256:7ca74052a38fa25fe9bedf52da0be7d3fdd2fb027c3b778ea78dfe8c212937d1 \
-    --hash=sha256:f2db3a10254241d9b447232cec8b424847f338d9d36f9a577a6192c332a46abd
+ipython==8.11.0 \
+    --hash=sha256:5b54478e459155a326bf5f42ee4f29df76258c0279c36f21d71ddb560f88b156 \
+    --hash=sha256:735cede4099dbc903ee540307b9171fbfef4aa75cfcacc5a273b2cda2f02be04
     # via -r requirements.dev.in
 isort==5.10.1 \
     --hash=sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7 \
@@ -238,9 +238,9 @@ pre-commit==3.1.1 \
     --hash=sha256:b80254e60668e1dd1f5c03a1c9e0413941d61f568a57d745add265945f65bfe8 \
     --hash=sha256:d63e6537f9252d99f65755ae5b79c989b462d511ebbc481b561db6a297e1e865
     # via -r requirements.dev.in
-prompt-toolkit==3.0.28 \
-    --hash=sha256:30129d870dcb0b3b6a53efdc9d0a83ea96162ffd28ffe077e94215b233dc670c \
-    --hash=sha256:9f1cd16b1e86c2968f2519d7fb31dd9d669916f515612c269d14e9ed52b51650
+prompt-toolkit==3.0.38 \
+    --hash=sha256:23ac5d50538a9a38c8bde05fecb47d0b403ecd0662857a86f886f798563d5b9b \
+    --hash=sha256:45ea77a2f7c60418850331366c81cf6b5b9cf4c7fd34616f733c5427e6abbb1f
     # via ipython
 ptyprocess==0.7.0 \
     --hash=sha256:4b41f3967fce3af57cc7e94b888626c18bf37a083e3651ca8feeb66d492fef35 \
@@ -381,5 +381,4 @@ setuptools==60.10.0 \
     --hash=sha256:782ef48d58982ddb49920c11a0c5c9c0b02e7d7d1c2ad0aa44e1a1e133051c96
     # via
     #   -c requirements.prod.txt
-    #   ipython
     #   pip-tools
