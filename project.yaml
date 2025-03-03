@@ -38,4 +38,4 @@ actions:
     needs: [generate_measures]
     outputs:
       moderately_sensitive:
-        deciles_charts: output/deciles_*_*.*
+        deciles_charts: output/deciles_*_*.png
