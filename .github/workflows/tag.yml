@@ -2,11 +2,12 @@
 name: Tag new version
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
 
-concurrency: tag-new-version
+concurrency: tag-new-version-group
 
 jobs:
   ci:
