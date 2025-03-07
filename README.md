@@ -116,9 +116,19 @@ Derived from a deciles table
 
 Please see [_DEVELOPERS.md_](DEVELOPERS.md).
 
+## A note on versions
+
+Because of a bug in the GitHub workflow that tagged versions,
+some versions of deciles-charts are ordered incorrectly:
+a later version precedes an earlier version,
+when versions are sorted by the dates their associated commits were created.
+For example, v0.0.44 (later) precedes v0.0.43 (earlier).
+The bug was fixed in [#114][].
+
 [1]: https://docs.opensafely.org/measures/
 [2]: https://www.thedatalab.org/blog/2019/04/communicating-variation-in-prescribing-why-we-use-deciles/
 [3]: https://www.opensafely.org/research/2021/service-restoration-observatory-1/
 [4]: https://github.com/opensafely-actions/deciles-charts/tags
-[cohort-extractor]: https://docs.opensafely.org/actions-cohortextractor/
+[#114]: https://github.com/opensafely-actions/deciles-charts/pull/114
 [OpenPrescribing.net]: https://openprescribing.net/
+[cohort-extractor]: https://docs.opensafely.org/actions-cohortextractor/
