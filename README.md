@@ -1,3 +1,11 @@
+-------------------------------------
+
+# :warning: DEPRECATED :warning:
+
+This reusable action has been deprecated and is no longer maintained.
+
+-------------------------------------
+
 # deciles-charts
 
 deciles-charts generates a table and a line chart for each [measure table][1] in an input directory.
